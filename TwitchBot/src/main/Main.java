@@ -15,7 +15,7 @@ public class Main
 		final MainFrame frame = new MainFrame("Twitch Listener", 480, 360, bot);
 				
 		bot.connectToServer("199.9.252.26", 6667, "oauth:l2as7dnczuhpxurm0ltlmz0thydsxwp");	
-		bot.joinChannel("#twitchplayspokemon");
+		bot.connectToChannel("#twitchplayspokemon", true);
 		bot.testConnection();
 		
 		Scanner scanner = new Scanner(System.in);
@@ -29,7 +29,7 @@ public class Main
 			}
 		});
 		
-		thread.run();
+		thread.start();
 		
 		while (!scanner.nextLine().contains("quit"));
 		

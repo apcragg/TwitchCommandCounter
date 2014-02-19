@@ -133,11 +133,11 @@ public class MainPanel extends JPanel implements Component
 		TwitchBot bot = root.getBot();
 		field1.setText(bot.getCurrentMessage());
 		
-		System.out.println(root.getDelay());
-		
 		for(int i = 0; i <bot.getHandler().getCommands().length; i++)
 		{
-			fields.get(i).setText(Integer.toString(bot.getHandler().getCommandCount().get(bot.getHandler().getCommands()[i])));
+			int value = bot.getHandler().getCommandCount().get(bot.getHandler().getCommands()[i]);
+			fields.get(i).setText(Integer.toString(value));
+			fields.get(i).setBackground(logic.Util.lerp(Color.GREEN, Color.red, value / (float) bot.getHandler().getTotalVotes()));
 		}
 	}
 

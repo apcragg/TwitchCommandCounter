@@ -9,9 +9,12 @@ public class BotHandler
 	private final String commands[] = { "start", "left", "right", "up", "down", "a", "b", "anarchy", "democracy"};
 	private Map<String, Integer> com;
 	
+	private int totalVotes;
+	
 	public BotHandler()
 	{
 		com = new HashMap<String, Integer>();
+		setTotalVotes(0);
 		
 		for(String s : commands)
 			com.put(s, 0);
@@ -24,7 +27,10 @@ public class BotHandler
 		if(!com.containsKey(message))
 			com.put(message, 1);
 		else
+		{
+			totalVotes++;
 			com.put(message, com.get(message) + 1);
+		}
 	}	
 	
 	public String getTop()
@@ -57,5 +63,15 @@ public class BotHandler
 	public Map<String, Integer> getCommandCount()
 	{
 		return com;
+	}
+
+	public int getTotalVotes()
+	{
+		return totalVotes;
+	}
+
+	public void setTotalVotes(int totalVotes)
+	{
+		this.totalVotes = totalVotes;
 	}
 }

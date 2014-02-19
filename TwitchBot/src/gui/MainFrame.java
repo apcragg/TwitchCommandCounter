@@ -1,16 +1,19 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.CompoundName;
 import javax.swing.JFrame;
+
+import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 
 import logic.Component;
 import main.TwitchBot;
 
-@SuppressWarnings("serial")
 public class MainFrame extends JFrame 
 {
 	private List<Component> components;
@@ -30,7 +33,7 @@ public class MainFrame extends JFrame
 		this.width = width;
 		this.height = height;
 		this.bot = bot;
-		this.delay = 1f;
+		this.delay = .5f;
 
 		getContentPane().setPreferredSize(new Dimension(width, height));
 	
@@ -61,13 +64,17 @@ public class MainFrame extends JFrame
 			currentTime = System.nanoTime();
 			elapsedTime = currentTime - startTime;
 			
+			
 			if(elapsedTime / 1E9d > getDelay())
-			{
+			{			
 				startTime = System.nanoTime();
 				
 				for(Component component : components)
 					component.update();
 			}
+			
+			try { Thread.sleep(0); }
+			catch (Exception e) { e.printStackTrace(); }
 		}
 	}
 
