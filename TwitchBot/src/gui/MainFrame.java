@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import logic.Component;
 import main.TwitchBot;
 
+@SuppressWarnings("serial")
 public class MainFrame extends JFrame 
 {
 	private List<Component> components;
@@ -17,6 +18,7 @@ public class MainFrame extends JFrame
 	private String name;
 	private TwitchBot bot;
 	private int width, height;
+	private double delay; //in seconds;
 
 	public MainFrame(String name, int width, int height, TwitchBot bot)
 	{
@@ -28,6 +30,7 @@ public class MainFrame extends JFrame
 		this.width = width;
 		this.height = height;
 		this.bot = bot;
+		this.delay = 1f;
 
 		getContentPane().setPreferredSize(new Dimension(width, height));
 	
@@ -49,13 +52,22 @@ public class MainFrame extends JFrame
 	
 	public void loop()
 	{
+		long startTime = System.nanoTime();
+		long currentTime = startTime;
+		long elapsedTime = 0;
+		
 		while(true)
 		{
-			for(Component component : components)
-				component.update();
+			currentTime = System.nanoTime();
+			elapsedTime = currentTime - startTime;
 			
-			try { Thread.sleep(16);}
-			catch (Exception e) { e.printStackTrace();}
+			if(elapsedTime / 1E9d > getDelay())
+			{
+				startTime = System.nanoTime();
+				
+				for(Component component : components)
+					component.update();
+			}
 		}
 	}
 
@@ -99,6 +111,16 @@ public class MainFrame extends JFrame
 	public void setHeight(int height)
 	{
 		this.height = height;
+	}
+	
+	public void setDelay(double d)
+	{
+		this.delay = d;
+	}
+	
+	public double getDelay()
+	{
+		return delay;
 	}
 
 	@Override

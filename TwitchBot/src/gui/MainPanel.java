@@ -7,8 +7,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import logic.Component;
@@ -20,8 +25,10 @@ public class MainPanel extends JPanel implements Component
 	private final MainFrame root;
 	private int width, height;
 	
-	private JTextField feidl1;
-	private List<JTextField> feilds;
+	private JTextField field1;
+	private JTextField field2;
+	private List<JTextField> fields;
+	private List<JTextArea> areas;
 	
 	public MainPanel(final MainFrame root)
 	{
@@ -29,15 +36,16 @@ public class MainPanel extends JPanel implements Component
 		this.root = root;
 		this.width = root.getWidth();
 		this.height = root.getHeight();
-		this.feilds = new ArrayList<JTextField>();
+		this.fields = new ArrayList<JTextField>();
+		this.areas = new ArrayList<JTextArea>();
 		
 		setSize(width, height);
 			
-		JButton button = new JButton("Exit App");
-		button.setSize(new Dimension(100, 33));
-		button.setLocation(20, 20);
+		JButton exit = new JButton("Exit App");
+		exit.setSize(new Dimension(100, 33));
+		exit.setLocation(20, 20);
 		
-		button.addActionListener(new ActionListener()
+		exit.addActionListener(new ActionListener()
 		{			
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -46,35 +54,90 @@ public class MainPanel extends JPanel implements Component
 			}
 		});
 		
-		add(button);
+		JButton update = new JButton("Update");
+		update.setSize(new Dimension(100, 33));
+		update.setLocation(130, 20);
 		
-		feidl1 = new JTextField("default", 25);
-		feidl1.setBounds(20, 60, (int) feidl1.getPreferredSize().getWidth(), (int) feidl1.getPreferredSize().getHeight());
-		feidl1.setBackground(new Color(.85f, .85f, .9f));
+		update.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				update();
+			}
+		});
+		
+		ButtonGroup group = new ButtonGroup();
+		final double[] choices = {.1d, .25d, .5d, 1d, 2d, 5d, 10d, 30d};
+		
+		for(int i = 0; i < 8; i++)
+		{
+			JRadioButton button = new JRadioButton();
+			
+			if(i == 0) button.setSelected(true);
+			final double d = choices[i];
+			
+			button.setAction(new AbstractAction()		
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					root.setDelay(d);
+				}			
+			});
+				
+			button.setText(choices[i] + " seconds");
+			button.setBackground(new Color(.85f, .85f, .9f));		
+			button.setBounds(320, 85 + (i * 30), button.getPreferredSize().width, button.getPreferredSize().height);					
+			
+			group.add(button);
+			add(button);
+		}	
+	
+		add(exit);
+		add(update);
+		
+		field1 = new JTextField("default", 20);
+		field1.setBounds(20, 60, (int) field1.getPreferredSize().getWidth(), (int) field1.getPreferredSize().getHeight());
+		field1.setBackground(new Color(.85f, .85f, .9f));
+		
+		field2 = new JTextField("  Update Delay");
+		field2.setBounds(320, 60, (int) field2.getPreferredSize().getWidth() + 10, (int) field2.getPreferredSize().getHeight());
+		field2.setBackground(new Color(.85f, .85f, .9f));
+		field2.setEditable(false);
+		field2.setBorder(BorderFactory.createEmptyBorder());
 		
 		for(int i = 0; i < root.getBot().getHandler().getCommands().length; i++)
 		{
-			JTextField feild = new JTextField();
-			feild.setBounds(20, 85 + (25 * i), (int) feidl1.getPreferredSize().getWidth(), (int) feidl1.getPreferredSize().getHeight());
-			feild.setBackground(new Color(.85f, .85f, .9f));
+			JTextField field = new JTextField(15);
+			field.setBounds(110, 85 + (25 * i), (int) field.getPreferredSize().getWidth(), (int) field.getPreferredSize().getHeight());
+			field.setBackground(new Color(.85f, .85f, .9f));
 			
-			feilds.add(feild);
+			fields.add(field);
 			
-			add(feild);
+			JTextField label = new JTextField(root.getBot().getHandler().getCommands()[i], 16);
+			label.setBounds(20, 85 + (25 * i), 80, (int) field.getPreferredSize().getHeight());
+			label.setBackground(new Color(.85f, .85f, .9f));
+			
+			add(field);
+			add(label);
 		}
 		
-		add(feidl1);
+		add(field1);
+		add(field2);
 		root.setVisible(true);
 	}
 	
 	public void update()
-	{
+	{		
 		TwitchBot bot = root.getBot();
-		feidl1.setText(bot.getCurrentMessage());
+		field1.setText(bot.getCurrentMessage());
+		
+		System.out.println(root.getDelay());
 		
 		for(int i = 0; i <bot.getHandler().getCommands().length; i++)
 		{
-			feilds.get(i).setText(bot.getHandler().getCommands()[i] + " " + bot.getHandler().getCommandCount().get(bot.getHandler().getCommands()[i]));
+			fields.get(i).setText(Integer.toString(bot.getHandler().getCommandCount().get(bot.getHandler().getCommands()[i])));
 		}
 	}
 

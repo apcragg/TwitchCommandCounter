@@ -4,6 +4,8 @@ import gui.MainFrame;
 
 import java.util.Scanner;
 
+import logic.BotHandler;
+
 public class Main
 {
 	public static void main(String vmArgs[])
@@ -15,7 +17,7 @@ public class Main
 		bot.connectToServer("199.9.252.26", 6667, "oauth:l2as7dnczuhpxurm0ltlmz0thydsxwp");	
 		bot.joinChannel("#twitchplayspokemon");
 		bot.testConnection();
-
+		
 		Scanner scanner = new Scanner(System.in);
 		
 		Thread thread = new Thread(new Runnable()

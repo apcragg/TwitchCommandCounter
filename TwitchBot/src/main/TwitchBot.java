@@ -1,6 +1,9 @@
 package main;
 
 import java.io.IOException;
+import java.rmi.ConnectException;
+
+import logic.BotHandler;
 
 import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
